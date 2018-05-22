@@ -4,15 +4,16 @@
       v-on:changeMonth="changeMonth"
       :markDate="markDate"
       v-if="markDate"
-      v-on:choseDay="choseDay"
+      v-on:choseDay="choseDayHandle"
     ></Calendar>
 
-    <main>
-      <TodoList v-bind:todos="nowTodos" v-if="nowTodos" height="500"></TodoList>
+    <main >
+      <TodoList v-bind:todos="nowTodos" v-if="nowTodos && !create" height="400"></TodoList>
+      <TodoCreate v-if="create" v-bind:choseDay="choseDay"></TodoCreate>
     </main>
 
     <footer>
-      <div @click="goToTodos">
+      <div @click="goToCreateTodos" v-if="!create">
         <img src="../../../static/img/分组.png" class="footer-img">
       </div>
     </footer>
@@ -25,6 +26,8 @@
 
   import TodoList from '../../components/todo_list'
 
+  import TodoCreate from '../../components/todo_create'
+
   import store from '../../store'
 
   import Vue from 'vue'
@@ -32,7 +35,8 @@
   export default {
     components: {
       Calendar,
-      TodoList
+      TodoList,
+      TodoCreate
     },
 
     computed: {
@@ -49,14 +53,21 @@
     },
     data() {
       return {
+        create: false,
+        choseDay: new Date()
       }
     },
     methods: {
       changeMonth(date) {
         Vue.$todoService.getTodosDateSet(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}`)
       },
-      choseDay(date) {
+      choseDayHandle(date) {
+        this.create = false
+        this.choseDay = date
         Vue.$todoService.getTodosFromDate(date)
+      },
+      goToCreateTodos() {
+        this.create = true
       }
     }
   }
