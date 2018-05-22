@@ -1,12 +1,25 @@
 import Vue from 'vue'
 import App from './App'
 
-import TodoService from './service/mock/todo.service'
+import TodoService from './service/todo.service'
+
+import WeatherService from './service/weather.service'
+
+import MockTodoService from './service/mock/todo.service'
+
+import WordService from './service/word.service'
 
 Vue.config.productionTip = false
 App.mpType = 'app'
 
-Vue.todoService = new TodoService()
+Vue.$todoService = new TodoService()
+
+Vue.$weatherService = new WeatherService()
+
+Vue.$wordService = new WordService()
+
+Vue.todoService = new MockTodoService()
+
 
 const app = new Vue(App)
 app.$mount()

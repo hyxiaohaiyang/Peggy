@@ -156,14 +156,14 @@
         </li>
       </div>
       <div class="wh_content wh_week">
-        <div class="wh_content_item" v-for="tag in textTop">
+        <div class="wh_content_item" v-for="tag in textTop" :key="Date.now()">
           <div style="color: #ffffff">
             {{tag}}
           </div>
         </div>
       </div>
       <div class="wh_content">
-        <div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)">
+        <div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)" :key="Date.now()">
           <div>
             <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="[{isToday_now:item.isTodayNow}, setClass(item)]">
               {{item.id}}
