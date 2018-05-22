@@ -111,7 +111,7 @@
 
   .wh_content_item div .isToday_now {
     margin: auto;
-    background-color: #85D8FF;
+    background-color: #85D8FF!important;
     color: #ffffff;
     border-radius: 100px;
     text-align: center;
@@ -119,7 +119,7 @@
 
   .wh_content_item div .wh_isToday {
     margin: auto;
-    background-color: #85D8FF;
+    background-color: #ffe313;
     color: #ffffff;
     border-radius: 100px;
     text-align: center;
@@ -135,7 +135,7 @@
 
   .wh_content_item div .wh_isMark {
     margin: auto;
-    border-bottom: #85D8FF 3px dotted;
+    border: #ffe313 3px dotted;
     text-align: center;
   }
 
@@ -168,7 +168,7 @@
             <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="[{isToday_now:item.isTodayNow}, setClass(item)]">
               {{item.id}}
             </li>
-            <li v-else="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="[{ wh_isToday: item.isToday,wh_isMark:item.isMark,isToday_now:item.isTodayNow}, setClass(item)]">
+            <li v-else="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="[{ wh_isToday: item.isToday,wh_isMark:item.isMark && !item.isToday && !item.isTodayNow,isToday_now:item.isTodayNow}, setClass(item)]">
               {{item.id}}
             </li>
           </div>

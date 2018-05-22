@@ -1,7 +1,10 @@
 <template>
   <section class="container">
     <Calendar
-
+      v-on:changeMonth="changeMonth"
+      :markDate="markDate"
+      v-if="markDate"
+      v-on:choseDay="choseDay"
     ></Calendar>
 
     <main>
@@ -24,6 +27,8 @@
 
   import store from '../../store'
 
+  import Vue from 'vue'
+
   export default {
     components: {
       Calendar,
@@ -33,16 +38,26 @@
     computed: {
       nowTodos() {
         return store.getters['todo/sortNowTodos']('rank')
+      },
+      markDate() {
+        return store.state.todo.markDate
       }
     },
 
     created() {
+      Vue.$todoService.getTodosDateSet()
     },
     data() {
       return {
       }
     },
     methods: {
+      changeMonth(date) {
+        Vue.$todoService.getTodosDateSet(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}`)
+      },
+      choseDay(date) {
+        Vue.$todoService.getTodosFromDate(date)
+      }
     }
   }
 </script>

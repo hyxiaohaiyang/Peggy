@@ -2,12 +2,13 @@
   <section class="main-todos" v-bind:style="{height: height + 'rpx'}">
     <div class="main-todo" v-for="todo in todos" :key="Date.now()" @touchstart="touchS" @touchmove="touchM" @touchend="touchE" v-bind:data-todo="todo" v-bind:animation="goTop">
       <div class="main-todo-title">
-        <i class="circle" v-bind:class="{'circle-yellow': todo.rank === 1}"></i>
-        <span class="main-todo-str" v-bind:class="{'main-todo-str-yellow': todo.rank === 1}">{{todo.content}}</span>
+        <i class="circle" v-bind:class="{'circle-yellow': todo.rank === 1, 'circle-red': todo.rank === 2}"></i>
+        <span class="main-todo-str" v-bind:class="{'main-todo-str-yellow': todo.rank === 1, 'main-todo-str-red': todo.rank === 2}">{{todo.content}}</span>
       </div>
       <div class="main-todo-footer">
         <span class="main-todo-type" v-if="todo.type === 1">单日</span> <span class="main-todo-type" v-else>多日</span>
         <span class="main-todo-typestr" v-if="todo.type === 2">{{ todo.verboseEndAt }}</span>
+
       </div>
     </div>
   </section>
@@ -110,6 +111,10 @@
     border: 1px #f7b451 solid;
   }
 
+  .main-todos .main-todo .main-todo-title .circle-red {
+    border: 1px #ff1800 solid;
+  }
+
   .main-todos .main-todo .main-todo-title .main-todo-str {
     margin-left: 3%;
     flex-basis: 90%;
@@ -117,6 +122,10 @@
 
   .main-todos .main-todo .main-todo-title .main-todo-str-yellow {
     color: #f7b451;
+  }
+
+  .main-todos .main-todo .main-todo-title .main-todo-str-red {
+    color: #ff1800;
   }
 
   .main-todos .main-todo .main-todo-footer {

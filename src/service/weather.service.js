@@ -122,29 +122,37 @@ export default class WeatherService {
   }
 
   getWeather() {
-    wx.getLocation({
-      type: 'wgs84',
-      success: res => {
-        wx.request({
-          url: this.weatherApiUrl,
+    wx.getStorage({
+      key: 'signInfo',
+      success: keyRes => {
+        wx.getLocation({
+          type: 'wgs84',
+          success: res => {
+            wx.request({
+              url: this.weatherApiUrl,
 
-          method: 'POST',
+              method: 'POST',
 
-          header: {
-            'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
+              header: {
+                'Authorization': `Bearer ${JSON.parse(keyRes.data).jwt.token}`
+              },
+
+              data: {
+                longitude: res.longitude,
+                latitude: res.latitude
+              },
+
+              success: (res) => {
+                if (res.statusCode === 200) {
+                  wx.setStorageSync('weatherInfo', JSON.stringify(res.data))
+                }
+              }
+            })
           },
-
-          data: {
-            longitude: res.longitude,
-            latitude: res.latitude
-          },
-
-          success: (res) => {
-            if (res.statusCode === 200) {
-              wx.setStorageSync('weatherInfo', JSON.stringify(res.data))
-            }
-          }
         })
+      },
+      fail: () => {
+        this.getWeather()
       }
     })
   }

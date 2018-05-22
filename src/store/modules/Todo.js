@@ -1,6 +1,7 @@
 const state = {
   allTodos: [],
-  nowTodos: []
+  nowTodos: [],
+  markDate: []
 }
 
 const getters = {
@@ -9,7 +10,9 @@ const getters = {
     switch (sortBy) {
       case 'rank':
         tmpArray
-          .sort((a, b) => a.rank - b.rank)
+          .sort((a, b) => {
+            return b.rank - a.rank
+          })
           .forEach(v => {
             if (v.type === 2) {
               // MPVUE不支持html绑定methods，所以将生成描述性截止日期信息逻辑放置于此
@@ -33,6 +36,9 @@ const mutations = {
       date: date,
       todos: state.nowTodos
     })
+  },
+  setMarkDate(state, markDate) {
+    state.markDate = [...markDate]
   },
   deleteNowTodo(state, {date, todo}) {
     state.nowTodos.splice(state.nowTodos.findIndex(v => v._id === todo._id), 1)

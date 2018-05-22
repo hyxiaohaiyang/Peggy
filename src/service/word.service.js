@@ -10,10 +10,6 @@ export default class WordService {
 
         method: 'GET',
 
-        header: {
-          'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
-        },
-
         success: res => {
           if (res.statusCode === 200) {
             resolve(res.data)

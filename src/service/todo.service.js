@@ -14,22 +14,56 @@ export default class TodoService {
   getTodosFromDate(timeStamp) {
     const dateStr = this.timeStampParse(timeStamp);
 
-    wx.request({
-      url: `${this.todoApiUrl}/${dateStr}`,
-
-      method: 'GET',
-
-      header: {
-        'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
-      },
-
+    wx.getStorage({
+      key: 'signInfo',
       success: res => {
-        if (res.statusCode === 200) {
-          store.commit('todo/setNowTodos', {
-            date: dateStr,
-            todos: res.data
-          })
-        }
+        wx.request({
+          url: `${this.todoApiUrl}/${dateStr}`,
+
+          method: 'GET',
+
+          header: {
+            'Authorization': `Bearer ${JSON.parse(res.data).jwt.token}`
+          },
+
+          success: res => {
+            if (res.statusCode === 200) {
+              store.commit('todo/setNowTodos', {
+                date: dateStr,
+                todos: res.data
+              })
+            }
+          }
+        })
+      },
+      fail: () => {
+        this.getTodosFromDate(timeStamp)
+      }
+    })
+  }
+
+  getTodosDateSet(year_month = `${new Date().getFullYear()}-${new Date().getMonth() + 1}`) {
+    wx.getStorage({
+      key: 'signInfo',
+      success: res => {
+        wx.request({
+          url: `${this.todoApiUrl}/date/${year_month}`,
+
+          method: 'GET',
+
+          header: {
+            'Authorization': `Bearer ${JSON.parse(res.data).jwt.token}`
+          },
+
+          success: (res) => {
+            if (res.statusCode === 200) {
+              store.commit('todo/setMarkDate', res.data)
+            }
+          }
+        })
+      },
+      fail: () => {
+        this.getTodosDateSet(year_month)
       }
     })
   }

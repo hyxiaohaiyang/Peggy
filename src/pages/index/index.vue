@@ -27,7 +27,7 @@
         <img src="../../../static/img/排序.png"/>
       </section>
 
-     <TodoList v-bind:todos="todos" v-if="todos" height="700"></TodoList>
+      <TodoList v-bind:todos="todos" v-if="todos" height="700"></TodoList>
 
     </main>
 
@@ -66,7 +66,6 @@
       }
     },
     created() {
-      Vue.$todoService.getTodosFromDate(Date.now())
       this.parseWeatherData()
       Vue.$wordService.getWord()
         .then(data => {
@@ -78,12 +77,21 @@
 
         })
     },
+    onShow() {
+      Vue.$todoService.getTodosFromDate(Date.now())
+    },
     methods: {
       parseWeatherData() {
-        const weatherInfo = JSON.parse(wx.getStorageSync('weatherInfo'))
-        const options = Vue.$weatherService.weatherToIconOptions
-        this.weathertext = options[weatherInfo.code].text
-        this.weatherIconClass = options[weatherInfo.code].class
+        wx.getStorage({
+          key: 'weatherInfo',
+          success: res => {
+            const weatherInfo = JSON.parse(res.data)
+            const options = Vue.$weatherService.weatherToIconOptions
+            this.weathertext = options[weatherInfo.code].text
+            this.weatherIconClass = options[weatherInfo.code].class
+          },
+          fail: () => this.parseWeatherData()
+        })
       },
       goToTodos() {
         wx.navigateTo({
@@ -157,7 +165,6 @@
     width: 100%;
   }
 
-
   .main-head {
     height: 40px;
     display: flex;
@@ -194,7 +201,7 @@
   footer div {
     cursor: pointer;
     background: #85D8FF;
-    box-shadow: 0 3px 3px 0 rgba(93,198,248,0.42);
+    box-shadow: 0 3px 3px 0 rgba(93, 198, 248, 0.42);
     width: 60px;
     height: 60px;
     border-radius: 50%;

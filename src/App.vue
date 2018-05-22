@@ -3,7 +3,6 @@
 
   export default {
     created() {
-
       if (!this.checkToken()) {
         this.login()
       }
