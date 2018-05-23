@@ -1,49 +1,104 @@
 <template>
   <section class="todo-create">
     <section class="todo-create-tab">
-      <button v-bind:class="{'activate': choseType === 0}" @click="choseType = 0">当日</button>
-      <button v-bind:class="{'activate': choseType === 1}" @click="choseType = 1">多日</button>
+      <button v-bind:class="{'activate': choseType === 1}" @click="choseType = 1">当日</button>
+      <button v-bind:class="{'activate': choseType === 2}" @click="choseType = 2">多日</button>
     </section>
 
-    <section class="todo-create-input">
+    <section class="todo-create-input" v-if="choseType === 1">
       <img src="../../static/img/铅笔.png"/>
       <div>
-        <input v-bind:placeholder="'这里填写'+date+'日的安排'" auto-focus/>
+        <input v-bind:placeholder="'这里填写'+date+'日的安排'"  v-model="content" auto-focus/>
+      </div>
+    </section>
+
+    <section class="todo-create-type2-input" v-if="choseType === 2">
+      <div class="type2-date">
+        <img src="../../static/img/日期黑.png">
+        <span class="type2-date-starttime">{{startDay}}</span>
+        <span>-------</span>
+        <picker mode="date" :value="endAt" :start="pickerStart" @change="bindDateChange">
+          <view class="picker">
+            <span v-if="!endAt">请选择截止日期</span><span v-else>{{verboseEndAt}}</span>
+          </view>
+        </picker>
+      </div>
+      <div class="todo-create-input" style="justify-content: space-around">
+        <img src="../../static/img/铅笔.png"/>
+        <div>
+          <input v-bind:placeholder="'这里填写'+date+'日的安排'" v-model="content"/>
+        </div>
       </div>
     </section>
 
     <section class="todo-create-choicerank">
-      <div class="choice"><i></i>普通</div>
-      <div class="str-yellow"><i class="circle-yellow"></i>一般</div>
-      <div class="str-red"><i class="circle-red"></i>重要</div>
+      <div @click="choseRank = 0" v-bind:class="{'choice': choseRank === 0}"><i></i>普通</div>
+      <div class="str-yellow" @click="choseRank = 1" v-bind:class="{'choice': choseRank === 1}"><i class="circle-yellow"></i>一般</div>
+      <div class="str-red" @click="choseRank = 2" v-bind:class="{'choice': choseRank === 2}"><i class="circle-red"></i>重要</div>
     </section>
 
-    <button class="todo-create-createBtn">确定添加</button>
+    <button class="todo-create-createBtn" @click="submit">确定添加</button>
   </section>
 </template>
 
 <script>
+
+
+  import {formatTime} from "../utils"
+
+  import Vue from 'vue'
+
   export default {
     props: {
       choseDay: null
     },
+    computed: {
+      verboseEndAt() {
+        return this.toVerboseTimeString(new Date(this.endAt))
+      }
+    },
     data() {
       return {
         date: null,
-        choseType: 0
+        choseType: 1,
+        choseRank: 0,
+        content: '',
+        endAt: null,
+        startDay: null,
+        pickerStart: null
       }
     },
     created() {
       this.parseChoseDay()
     },
     methods: {
+      toVerboseTimeString(date) {
+        // 将时间对象转换成可读字符串
+        return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+      },
+
       parseChoseDay() {
+        // choseDay是日历组件选择是传递过来的数据，一般为2018/5/22如此的数据，当没选择时传进来的是当天的的时间对象
+        // 此函数提取出时间对象的日期
+        console.log(this.choseDay)
         try {
-          this.date = this.choseDay.getDate()
+          this.startDay = this.toVerboseTimeString(this.choseDay)
+          this.pickerStart = formatTime(this.choseDay, "yyyy-MM-dd")
+          this.date = this.choseDay.getDate() // date是用来在输入框中提示用的，显示选择的日期
         } catch (e) {
-          this.date = new Date(this.choseDay).getDate()
+          const d = new Date(this.choseDay)
+          this.pickerStart = formatTime(d, "yyyy-MM-dd")
+          this.startDay = this.toVerboseTimeString(d)
+          this.date = d.getDate()
         }
       },
+      bindDateChange(e) {
+        this.endAt = e.mp.detail.value
+      },
+      submit() {
+        Vue.$todoService.createTodo(this.choseDay, this.choseType, this.choseRank, this.content, this.endAt)
+        this.$emit('hasCreate')
+      }
     }
   }
 </script>
@@ -103,7 +158,38 @@
   .todo-create .todo-create-input div {
     flex-basis: 70%;
     border-bottom: 2px solid #8d8d8d;
+    color: #A1A1A1;
   }
+
+  .todo-create .todo-create-type2-input {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .todo-create .todo-create-type2-input .type2-date {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 14px;
+    color: #A1A1A1;
+  }
+
+  .todo-create .todo-create-type2-input .type2-date img {
+    max-width: 28px;
+    height: 28px;
+    flex-basis: 30%;
+  }
+
+  .todo-create .todo-create-type2-input .type2-date .type2-date-starttime,
+  .todo-create .todo-create-type2-input .type2-date picker {
+    border-bottom: 2px solid #8d8d8d;
+  }
+
 
   .todo-create .todo-create-choicerank {
     margin-top: 30px;
@@ -127,6 +213,17 @@
     border: 1px solid #222222;
     border-radius: 3px;
   }
+
+  .todo-create .todo-create-choicerank .choice[class*=str-yellow] {
+    border: 1px solid #f7b451;
+    border-radius: 3px;
+  }
+
+  .todo-create .todo-create-choicerank .choice[class*=str-red] {
+    border: 1px solid #ff1800;
+    border-radius: 3px;
+  }
+
 
   .todo-create .todo-create-choicerank .str-yellow {
     color: #f7b451;
@@ -154,7 +251,7 @@
   }
 
   .todo-create .todo-create-createBtn {
-    margin-top: 35px;
+    margin-top: 45px;
     width: 75%;
     height: 41px;
     background: #85D8FF;

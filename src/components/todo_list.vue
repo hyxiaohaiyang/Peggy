@@ -1,6 +1,6 @@
 <template>
   <section class="main-todos" v-bind:style="{height: height + 'rpx'}">
-    <div class="main-todo" v-for="todo in todos" :key="Date.now()" @touchstart="touchS" @touchmove="touchM" @touchend="touchE" v-bind:data-todo="todo" v-bind:animation="goTop">
+    <div class="main-todo" v-for="todo in todos" :key="Date.now()" @touchstart="touchS" @touchmove="touchM" @touchend="touchE" v-bind:data-todo="todo">
       <div class="main-todo-title">
         <i class="circle" v-bind:class="{'circle-yellow': todo.rank === 1, 'circle-red': todo.rank === 2}"></i>
         <span class="main-todo-str" v-bind:class="{'main-todo-str-yellow': todo.rank === 1, 'main-todo-str-red': todo.rank === 2}">{{todo.content}}</span>
@@ -45,19 +45,12 @@
             content: '是否删除该Todo',
             success: (res) => {
               if (res.confirm) {
-                this.goTop = wx.createAnimation({
-                  duration: 500,
-                  timingFunction: "ease",
-                  delay: 0
-                });
                 Vue.$todoService.deleteTodo(e.currentTarget.dataset.todo)
                 wx.showToast({
                   title: '删除成功',
                   icon: 'success',
                   duration: 2000
                 });
-                this.goTop.translateY(-40).step().translateY(0).step()
-                this.goTop = this.goTop.export();
               }
             }
           })

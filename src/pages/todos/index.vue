@@ -9,7 +9,7 @@
 
     <main >
       <TodoList v-bind:todos="nowTodos" v-if="nowTodos && !create" height="400"></TodoList>
-      <TodoCreate v-if="create" v-bind:choseDay="choseDay"></TodoCreate>
+      <TodoCreate v-if="create" v-bind:choseDay="choseDay" v-on:hasCreate="handleCreate"></TodoCreate>
     </main>
 
     <footer>
@@ -68,6 +68,14 @@
       },
       goToCreateTodos() {
         this.create = true
+      },
+      handleCreate() {
+        wx.showToast({
+          title: '创建成功',
+          icon: 'success',
+          duration: 2000
+        })
+        this.create = false
       }
     }
   }

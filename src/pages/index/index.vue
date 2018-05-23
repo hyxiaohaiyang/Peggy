@@ -24,7 +24,12 @@
       <section class="main-head">
         <span>今日日程</span>
         <time>{{today}}</time>
-        <img src="../../../static/img/排序.png"/>
+        <picker @change="bindSortChange" :range="sortBy">
+          <view class="picker">
+            <img src="../../../static/img/排序.png"/>
+          </view>
+        </picker>
+
       </section>
 
       <TodoList v-bind:todos="todos" v-if="todos" height="700"></TodoList>
@@ -57,12 +62,23 @@
         today: `${new Date().getMonth() + 1}月${new Date().getDate()}日`,
         weathertext: null,
         weatherIconClass: null,
-        word: null
+        word: null,
+        sortBy: [
+          "依照重要程度排序",
+          "依照类型排序",
+        ],
+        sortTodos: null
       }
     },
     computed: {
-      todos() {
-        return store.getters['todo/sortNowTodos']('rank')
+      todos: {
+        get: function () {
+          if (this.sortTodos) {
+            return this.sortTodos
+          } else {
+            return store.getters['todo/sortNowTodos']('rank')
+          }
+        }
       }
     },
     created() {
@@ -97,6 +113,16 @@
         wx.navigateTo({
           url: "/pages/todos/main"
         })
+      },
+      bindSortChange(e) {
+        switch (e.mp.detail.value) {
+          case "0":
+            this.sortTodos = store.getters['todo/sortNowTodos']('rank')
+            return
+          case "1":
+            this.sortTodos = store.getters['todo/sortNowTodos']('type')
+            return
+        }
       }
     },
   }
@@ -183,7 +209,7 @@
     flex-basis: 33.3%;
   }
 
-  .main-head img {
+  .main-head img, .main-head picker {
     max-width: 25px;
     height: 18px;
     flex-basis: 33.3%;

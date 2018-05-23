@@ -10,22 +10,29 @@ const getters = {
     switch (sortBy) {
       case 'rank':
         tmpArray
-          .sort((a, b) => {
-            return b.rank - a.rank
-          })
-          .forEach(v => {
-            if (v.type === 2) {
-              // MPVUE不支持html绑定methods，所以将生成描述性截止日期信息逻辑放置于此
-              const nowDate = new Date()
-              const endDate = new Date(v.endAt)
-              v.verboseEndAt = `
-              ${nowDate.getMonth() + 1}月${nowDate.getDate()}号--${endDate.getMonth() + 1}月${endDate.getDate()}日
-                    剩余${new Date(new Date(v.endAt) - new Date()).getDate()}天
-              `
-            }
-          })
-        return tmpArray
+          .sort((a, b) => b.rank - a.rank)
+        break
+      case 'type':
+        console.log(1)
+        tmpArray
+          .sort((a, b) => a.type - b.type)
+        break
+
+
     }
+    tmpArray.forEach(v => {
+      if (v.type === 2) {
+        // MPVUE不支持html绑定methods，所以将生成描述性截止日期信息逻辑放置于此
+        const createdDate = new Date(v.createdAt)
+        const nowDate = new Date()
+        const endDate = new Date(v.endAt)
+        v.verboseEndAt = `
+              ${createdDate.getMonth() + 1}月${createdDate.getDate()}号--${endDate.getMonth() + 1}月${endDate.getDate()}日
+                    剩余${parseInt((endDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24))}天
+              `
+      }
+    })
+    return tmpArray
   }
 }
 
@@ -39,6 +46,9 @@ const mutations = {
   },
   setMarkDate(state, markDate) {
     state.markDate = [...markDate]
+  },
+  addNowTodo(state, todo) {
+    state.nowTodos = [...state.nowTodos, todo]
   },
   deleteNowTodo(state, {date, todo}) {
     state.nowTodos.splice(state.nowTodos.findIndex(v => v._id === todo._id), 1)

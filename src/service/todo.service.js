@@ -68,6 +68,49 @@ export default class TodoService {
     })
   }
 
+  createTodo(createdAt, type, rank, content, endAt) {
+    createdAt = new Date(createdAt)
+    if (type === 2) endAt = new Date(endAt)
+
+    store.commit('todo/addNowTodo', {
+      createdAt: createdAt,
+      endAt: endAt,
+      content: content,
+      type: type,
+      rank: rank
+    })
+
+    wx.request({
+      url: `${this.todoApiUrl}`,
+
+      method: 'POST',
+
+      dataType: 'json',
+
+      data: {
+        type: type,
+        createdAt: createdAt,
+        rank: rank,
+        content: content,
+        endAt: endAt
+      },
+
+      header: {
+        'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
+      },
+
+      success: res => {
+        if (res.statusCode === 200) {
+          store.commit('todo/setNowTodos', {
+            date: dateStr,
+            todos: res.data
+          })
+        }
+      }
+    })
+
+  }
+
   deleteTodo(todo) {
     const datestr = this.timeStampParse(todo.createdAt)
 
