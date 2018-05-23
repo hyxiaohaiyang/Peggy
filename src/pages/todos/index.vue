@@ -69,7 +69,8 @@
       goToCreateTodos() {
         this.create = true
       },
-      handleCreate() {
+      handleCreate(createdAt) {
+        store.commit('todo/addMarkDate', createdAt)
         wx.showToast({
           title: '创建成功',
           icon: 'success',

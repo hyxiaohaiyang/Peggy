@@ -1,3 +1,5 @@
+import {formatTime} from "../../utils"
+
 const state = {
   allTodos: [],
   nowTodos: [],
@@ -13,11 +15,11 @@ const getters = {
           .sort((a, b) => b.rank - a.rank)
         break
       case 'type':
-        console.log(1)
         tmpArray
           .sort((a, b) => a.type - b.type)
         break
-
+      case 'is_done':
+        // TODO
 
     }
     tmpArray.forEach(v => {
@@ -46,6 +48,9 @@ const mutations = {
   },
   setMarkDate(state, markDate) {
     state.markDate = [...markDate]
+  },
+  addMarkDate(state, markDate) {
+    state.markDate = [...state.markDate, formatTime(new Date(markDate), 'yyyy/M/d')]
   },
   addNowTodo(state, todo) {
     state.nowTodos = [...state.nowTodos, todo]

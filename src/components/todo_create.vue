@@ -80,7 +80,6 @@
       parseChoseDay() {
         // choseDay是日历组件选择是传递过来的数据，一般为2018/5/22如此的数据，当没选择时传进来的是当天的的时间对象
         // 此函数提取出时间对象的日期
-        console.log(this.choseDay)
         try {
           this.startDay = this.toVerboseTimeString(this.choseDay)
           this.pickerStart = formatTime(this.choseDay, "yyyy-MM-dd")
@@ -97,7 +96,16 @@
       },
       submit() {
         Vue.$todoService.createTodo(this.choseDay, this.choseType, this.choseRank, this.content, this.endAt)
-        this.$emit('hasCreate')
+          .then(() => {
+            this.$emit('hasCreate', this.choseDay)
+          })
+          .catch((g) => {
+            wx.showToast({
+              title: '创建失败，请检查您的网络连接',
+              icon: 'none',
+              duration: 2000
+            })
+          })
       }
     }
   }

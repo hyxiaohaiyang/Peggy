@@ -80,33 +80,38 @@ export default class TodoService {
       rank: rank
     })
 
-    wx.request({
-      url: `${this.todoApiUrl}`,
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: `${this.todoApiUrl}`,
 
-      method: 'POST',
+        method: 'POST',
 
-      dataType: 'json',
+        dataType: 'json',
 
-      data: {
-        type: type,
-        createdAt: createdAt,
-        rank: rank,
-        content: content,
-        endAt: endAt
-      },
+        data: {
+          type: type,
+          createdAt: createdAt,
+          rank: rank,
+          content: content,
+          endAt: endAt
+        },
 
-      header: {
-        'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
-      },
+        header: {
+          'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
+        },
 
-      success: res => {
-        if (res.statusCode === 200) {
-          store.commit('todo/setNowTodos', {
-            date: dateStr,
-            todos: res.data
-          })
+        success: res => {
+          if (res.statusCode === 200) {
+            resolve(true)
+          } else {
+            reject(false)
+          }
+        },
+
+        fail: () => {
+          reject(false)
         }
-      }
+      })
     })
 
   }
