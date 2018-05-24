@@ -50,7 +50,10 @@ const mutations = {
     state.markDate = [...markDate]
   },
   addMarkDate(state, markDate) {
-    state.markDate = [...state.markDate, formatTime(new Date(markDate), 'yyyy/M/d')]
+    state.markDate = [...new Set([...state.markDate, formatTime(new Date(markDate), 'yyyy/M/d')])]
+  },
+  deleteMarkDate(state, markDate) {
+    state.markDate.splice(state.markDate.findIndex(v => v === formatTime(new Date(markDate), 'yyyy/M/d')), 1)
   },
   addNowTodo(state, todo) {
     state.nowTodos = [...state.nowTodos, todo]
@@ -61,6 +64,9 @@ const mutations = {
       date: date,
       todos: state.nowTodos
     })
+  },
+  updateNowTodo(state, todo) {
+    state.nowTodos.splice(state.nowTodos.findIndex(v => v._id === todo._id), 1, todo)
   },
   updateAllTodos(state, {date, todos}) {
     const index = state.allTodos.findIndex(v => v.date === date)

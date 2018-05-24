@@ -2,7 +2,7 @@ import store from '../store'
 
 export default class TodoService {
   constructor() {
-    this.todoApiUrl = 'http://127.0.0.1:3000/api/todo'
+    this.todoApiUrl = 'https://zhufengshop.com/api/todo'
   }
 
   timeStampParse(timeStamp) {
@@ -72,14 +72,6 @@ export default class TodoService {
     createdAt = new Date(createdAt)
     if (type === 2) endAt = new Date(endAt)
 
-    store.commit('todo/addNowTodo', {
-      createdAt: createdAt,
-      endAt: endAt,
-      content: content,
-      type: type,
-      rank: rank
-    })
-
     return new Promise((resolve, reject) => {
       wx.request({
         url: `${this.todoApiUrl}`,
@@ -102,6 +94,7 @@ export default class TodoService {
 
         success: res => {
           if (res.statusCode === 200) {
+            store.commit('todo/addNowTodo', res.data)
             resolve(true)
           } else {
             reject(false)
@@ -116,12 +109,52 @@ export default class TodoService {
 
   }
 
+  updateTodo(todo) {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: `${this.todoApiUrl}/${todo._id}`,
+
+        method: 'PUT',
+
+        dataType: 'json',
+
+        data: todo,
+
+        header: {
+          'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
+        },
+
+        success: res => {
+          if (res.statusCode === 200) {
+            store.commit('todo/updateNowTodo', res.data)
+            resolve(true)
+          } else {
+            reject(false)
+          }
+        },
+
+        fail: () => {
+          reject(false)
+        }
+
+
+      })
+    })
+  }
+
   deleteTodo(todo) {
+    console.log(todo)
     const datestr = this.timeStampParse(todo.createdAt)
 
     store.commit('todo/deleteNowTodo', {
       date: datestr,
       todo: todo
+    })
+
+    wx.showToast({
+      title: '删除成功',
+      icon: 'success',
+      duration: 2000
     })
 
     wx.request({

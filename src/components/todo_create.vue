@@ -6,7 +6,7 @@
     </section>
 
     <section class="todo-create-input" v-if="choseType === 1">
-      <img src="../../static/img/铅笔.png"/>
+      <img src="../../static/img/pencil.png"/>
       <div>
         <input v-bind:placeholder="'这里填写'+date+'日的安排'"  v-model="content" auto-focus/>
       </div>
@@ -14,7 +14,7 @@
 
     <section class="todo-create-type2-input" v-if="choseType === 2">
       <div class="type2-date">
-        <img src="../../static/img/日期黑.png">
+        <img src="../../static/img/db.png">
         <span class="type2-date-starttime">{{startDay}}</span>
         <span>-------</span>
         <picker mode="date" :value="endAt" :start="pickerStart" @change="bindDateChange">
@@ -23,9 +23,9 @@
           </view>
         </picker>
       </div>
-      <div class="todo-create-input" style="justify-content: space-around">
-        <img src="../../static/img/铅笔.png"/>
-        <div>
+      <div class="todo-create-input">
+        <img src="../../static/img/pencil.png" style="flex-basis: 20%"/>
+        <div style="flex-basis: 80%">
           <input v-bind:placeholder="'这里填写'+date+'日的安排'" v-model="content"/>
         </div>
       </div>
@@ -154,7 +154,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
   }
 
   .todo-create .todo-create-input img {
@@ -182,7 +182,7 @@
     flex-direction: row;
     width: 100%;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
     font-size: 14px;
     color: #A1A1A1;
   }
@@ -214,7 +214,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
   }
 
   .todo-create .todo-create-choicerank .choice {

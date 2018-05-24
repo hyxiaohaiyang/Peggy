@@ -8,6 +8,7 @@
     width: 100%;
     margin: auto;
     border-bottom: #f4f3f4 6px solid;
+    height: 46vh;
   }
 
   li {
@@ -28,6 +29,7 @@
     flex-wrap: wrap;
     padding: 0 3% 0 3%;
     width: 100%;
+    height: 30vh;
   }
 
   .wh_content:first-child .wh_content_item {
@@ -74,6 +76,7 @@
   .wh_top_changge {
     display: flex;
     background: #7ad3ff;
+    height: 6vh;
   }
 
   .wh_top_changge li {
@@ -94,6 +97,7 @@
 
   .wh_week {
     background: #7ad3ff;
+    height: 6vh;
   }
 
   .wh_jiantou1 {

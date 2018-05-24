@@ -1,9 +1,9 @@
 <template>
-  <section class="main-todos" v-bind:style="{height: height + 'rpx'}">
+  <section class="main-todos" v-bind:style="{height: height + 'vh'}">
     <div class="main-todo" v-for="todo in todos" :key="Date.now()" @touchstart="touchS" @touchmove="touchM" @touchend="touchE" v-bind:data-todo="todo">
       <div class="main-todo-title">
         <i class="circle" v-bind:class="{'circle-yellow': todo.rank === 1, 'circle-red': todo.rank === 2}"></i>
-        <span class="main-todo-str" v-bind:class="{'main-todo-str-yellow': todo.rank === 1, 'main-todo-str-red': todo.rank === 2}">{{todo.content}}</span>
+        <span class="main-todo-str" v-bind:class="{'main-todo-str-yellow': todo.rank === 1, 'main-todo-str-red': todo.rank === 2, 'main-todo-str-done': todo.is_done === true}" >{{todo.content}}</span>
       </div>
       <div class="main-todo-footer">
         <span class="main-todo-type" v-if="todo.type === 1">单日</span> <span class="main-todo-type" v-else>多日</span>
@@ -42,18 +42,42 @@
         if (this.disX > 80) {
           wx.showModal({
             title: '确认删除？',
-            content: '是否删除该Todo',
+            content: '是否删除该事项',
             success: (res) => {
               if (res.confirm) {
                 Vue.$todoService.deleteTodo(e.currentTarget.dataset.todo)
-                wx.showToast({
-                  title: '删除成功',
-                  icon: 'success',
-                  duration: 2000
-                });
+                this.$emit('hasDelete')
               }
             }
           })
+        } else if (this.disX < -80) {
+          if (e.currentTarget.dataset.todo.is_done) {
+            wx.showModal({
+              title: '取消已完成？',
+              content: '是否将该事项设置为未完成',
+              success: (res) => {
+                if (res.confirm) {
+                  const tmp = e.currentTarget.dataset.todo
+                  tmp.is_done = false
+                  Vue.$todoService.updateTodo(tmp)
+                  this.$emit('hasUpdate')
+                }
+              }
+            })
+          } else {
+            wx.showModal({
+              title: '已完成？',
+              content: '是否将该事项设置为已完成',
+              success: (res) => {
+                if (res.confirm) {
+                  const tmp = e.currentTarget.dataset.todo
+                  tmp.is_done = true
+                  Vue.$todoService.updateTodo(tmp)
+                  this.$emit('hasUpdate')
+                }
+              }
+            })
+          }
         }
         this.startX = 0;
         this.disX = 0;
@@ -76,7 +100,7 @@
     border-bottom: 2px solid #E3E3E3;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-around;
   }
 
   .main-todos .main-todo:last-child {
@@ -106,6 +130,10 @@
 
   .main-todos .main-todo .main-todo-title .circle-red {
     border: 1px #ff1800 solid;
+  }
+
+  .main-todos .main-todo .main-todo-title .main-todo-str-done {
+    text-decoration: line-through;
   }
 
   .main-todos .main-todo .main-todo-title .main-todo-str {

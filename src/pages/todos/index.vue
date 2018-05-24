@@ -8,13 +8,13 @@
     ></Calendar>
 
     <main >
-      <TodoList v-bind:todos="nowTodos" v-if="nowTodos && !create" height="400"></TodoList>
+      <TodoList v-bind:todos="nowTodos" v-if="nowTodos && !create" height="40" v-on:hasDelete="handleDelete"></TodoList>
       <TodoCreate v-if="create" v-bind:choseDay="choseDay" v-on:hasCreate="handleCreate"></TodoCreate>
     </main>
 
     <footer>
       <div @click="goToCreateTodos" v-if="!create">
-        <img src="../../../static/img/分组.png" class="footer-img">
+        <img src="../../../static/img/zu.png" class="footer-img">
       </div>
     </footer>
 
@@ -48,7 +48,7 @@
       }
     },
 
-    created() {
+    onLoad() {
       Vue.$todoService.getTodosDateSet()
     },
     data() {
@@ -77,6 +77,11 @@
           duration: 2000
         })
         this.create = false
+      },
+      handleDelete() {
+        if (this.nowTodos.length === 0) {
+          store.commit('todo/deleteMarkDate', this.choseDay)
+        }
       }
     }
   }
@@ -93,6 +98,7 @@
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
+    height: 10vh;
   }
   footer div {
     cursor: pointer;

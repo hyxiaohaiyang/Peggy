@@ -11,11 +11,11 @@
 
     <nav>
       <div>
-        <img src="../../../static/img/饼图.png" class="nav-img">
+        <img src="../../../static/img/bing.png" class="nav-img">
         历史日程评估
       </div>
       <div>
-        <img src="../../../static/img/PK邀请.png" class="nav-img">
+        <img src="../../../static/img/PK.png" class="nav-img">
         好友日程PK
       </div>
     </nav>
@@ -26,19 +26,19 @@
         <time>{{today}}</time>
         <picker @change="bindSortChange" :range="sortBy">
           <view class="picker">
-            <img src="../../../static/img/排序.png"/>
+            <img src="../../../static/img/sort.png"/>
           </view>
         </picker>
 
       </section>
 
-      <TodoList v-bind:todos="todos" v-if="todos" height="700"></TodoList>
+      <TodoList v-bind:todos="todos" v-if="todos" height="59" v-on:hasDelete="handleTodoChange" v-on:hasUpdate="handleTodoChange"></TodoList>
 
     </main>
 
     <footer>
       <div @click="goToTodos">
-        <img src="../../../static/img/日期.png" class="footer-img">
+        <img src="../../../static/img/date.png" class="footer-img">
       </div>
     </footer>
   </section>
@@ -81,20 +81,13 @@
         }
       }
     },
-    created() {
+    onLoad() {
       this.parseWeatherData()
-      Vue.$wordService.getWord()
-        .then(data => {
-          if (data.length > 40) {
-            this.word = '失败乃成功之母'
-          } else {
-            this.word = data
-          }
-
-        })
+      this.parseWordData()
     },
     onShow() {
       Vue.$todoService.getTodosFromDate(Date.now())
+      this.sortTodos = null
     },
     methods: {
       parseWeatherData() {
@@ -107,6 +100,16 @@
             this.weatherIconClass = options[weatherInfo.code].class
           },
           fail: () => this.parseWeatherData()
+        })
+      },
+      parseWordData() {
+        wx.getStorage({
+          key: 'wordInfo',
+          success: res => {
+            const wordInfo = JSON.parse(res.data)
+            this.word = wordInfo.text
+          },
+          fail: () => this.parseWordData()
         })
       },
       goToTodos() {
@@ -123,6 +126,9 @@
             this.sortTodos = store.getters['todo/sortNowTodos']('type')
             return
         }
+      },
+      handleTodoChange() {
+        this.sortTodos = null
       }
     },
   }
@@ -130,7 +136,7 @@
 
 <style scoped>
   header {
-    height: 60px;
+    height: 10vh;
     border-bottom: #f4f3f4 6px solid;
     width: 100%;
     display: flex;
@@ -165,7 +171,7 @@
   }
 
   nav {
-    height: 60px;
+    height: 10vh;
     border-bottom: #f4f3f4 6px solid;
     width: 100%;
     display: flex;
@@ -192,7 +198,7 @@
   }
 
   .main-head {
-    height: 40px;
+    height: 6vh;
     display: flex;
     align-items: center;
     border-bottom: #E3E3E3 2px dashed;
@@ -221,7 +227,7 @@
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
-
+    height: 10vh;
   }
 
   footer div {

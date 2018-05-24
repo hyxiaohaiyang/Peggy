@@ -1,21 +1,40 @@
 export default class WordService {
   constructor() {
-    this.wordApiUrl = 'http://127.0.0.1:3000/api/home/word'
+    this.wordApiUrl = 'https://zhufengshop.com/api/home/word'
   }
 
   getWord() {
     return new Promise((resolve, reject) => {
-      wx.request({
-        url: 'https://v1.hitokoto.cn/?c=d&encode=text',
+      const _this = this
+      function f() {
+        wx.getStorage({
+          key: 'signInfo',
+          success: keyRes => {
+            wx.request({
+              url: _this.wordApiUrl,
 
-        method: 'GET',
+              method: 'GET',
 
-        success: res => {
-          if (res.statusCode === 200) {
-            resolve(res.data)
+              header: {
+                'Authorization': `Bearer ${JSON.parse(keyRes.data).jwt.token}`
+              },
+
+              success: res => {
+                if (res.statusCode === 200) {
+                  wx.setStorage({
+                    key: 'wordInfo',
+                    data: JSON.stringify(res.data)
+                  })
+                }
+              }
+            })
+          },
+          fail: () => {
+            f()
           }
-        }
-      })
+        })
+      }
+      f()
     })
   }
 }
