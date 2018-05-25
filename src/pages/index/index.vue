@@ -1,16 +1,16 @@
 <template>
-  <section class="container">
+  <section class="container" @touchstart="touchS" @touchmove="touchM" @touchend="touchE">
     <header>
       <div>每日一句</div>
       <div>{{word}}</div>
       <div>
-        <i class="iconfont" v-bind:class="weatherIconClass"></i>
-        <span>{{weathertext}}</span>
+        <i class="iconfont" v-bind:class="weather.weatherIconClass"></i>
+        <span>{{weather.weathertext}}</span>
       </div>
     </header>
 
     <nav>
-      <div>
+      <div @click="goToEvaluate">
         <img src="../../../static/img/bing.png" class="nav-img">
         历史日程评估
       </div>
@@ -47,8 +47,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-
   import store from '../../store'
 
   import TodoList from '../../components/todo_list'
@@ -60,14 +58,13 @@
     data() {
       return {
         today: `${new Date().getMonth() + 1}月${new Date().getDate()}日`,
-        weathertext: null,
-        weatherIconClass: null,
-        word: null,
         sortBy: [
           "依照重要程度排序",
           "依照类型排序",
         ],
-        sortTodos: null
+        sortTodos: null,
+        startY: 0,
+        disY: 0
       }
     },
     computed: {
@@ -79,42 +76,44 @@
             return store.getters['todo/sortNowTodos']('rank')
           }
         }
+      },
+      word() {
+        return store.state.home.word
+      },
+      weather() {
+        return store.state.home.weather
       }
     },
-    onLoad() {
-      this.parseWeatherData()
-      this.parseWordData()
-    },
     onShow() {
-      Vue.$todoService.getTodosFromDate(Date.now())
       this.sortTodos = null
     },
     methods: {
-      parseWeatherData() {
-        wx.getStorage({
-          key: 'weatherInfo',
-          success: res => {
-            const weatherInfo = JSON.parse(res.data)
-            const options = Vue.$weatherService.weatherToIconOptions
-            this.weathertext = options[weatherInfo.code].text
-            this.weatherIconClass = options[weatherInfo.code].class
-          },
-          fail: () => this.parseWeatherData()
-        })
+      touchS(e) {
+        if(e.touches.length === 1){
+          this.startY = e.touches[0].clientY
+        }
       },
-      parseWordData() {
-        wx.getStorage({
-          key: 'wordInfo',
-          success: res => {
-            const wordInfo = JSON.parse(res.data)
-            this.word = wordInfo.text
-          },
-          fail: () => this.parseWordData()
-        })
+      touchM(e) {
+        this.disY = this.startY - e.touches[0].clientY;
+      },
+      touchE(e) {
+        console.log(this.disY)
+        if (this.disY > 250) {
+          wx.navigateTo({
+            url: "/pages/todos/main"
+          })
+        }
+        this.startY = 0;
+        this.disY = 0;
       },
       goToTodos() {
         wx.navigateTo({
           url: "/pages/todos/main"
+        })
+      },
+      goToEvaluate() {
+        wx.navigateTo({
+          url: '/pages/evaluate/main'
         })
       },
       bindSortChange(e) {

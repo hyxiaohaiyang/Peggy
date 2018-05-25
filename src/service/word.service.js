@@ -1,40 +1,35 @@
+import store from '../store'
+import {IS_DEV} from "../utils"
+
+
 export default class WordService {
   constructor() {
-    this.wordApiUrl = 'https://zhufengshop.com/api/home/word'
+    this.wordApiUrl = (() => IS_DEV ? 'http://127.0.0.1:3000/api/home/word' : 'https://zhufengshop.com/api/home/word')()
   }
 
-  getWord() {
-    return new Promise((resolve, reject) => {
-      const _this = this
-      function f() {
-        wx.getStorage({
-          key: 'signInfo',
-          success: keyRes => {
-            wx.request({
-              url: _this.wordApiUrl,
+  async getWord() {
+    wx.getStorage({
+      key: 'signInfo',
+      success: keyRes => {
+        wx.request({
+          url: this.wordApiUrl,
 
-              method: 'GET',
+          method: 'GET',
 
-              header: {
-                'Authorization': `Bearer ${JSON.parse(keyRes.data).jwt.token}`
-              },
-
-              success: res => {
-                if (res.statusCode === 200) {
-                  wx.setStorage({
-                    key: 'wordInfo',
-                    data: JSON.stringify(res.data)
-                  })
-                }
-              }
-            })
+          header: {
+            'Authorization': `Bearer ${JSON.parse(keyRes.data).jwt.token}`
           },
-          fail: () => {
-            f()
+
+          success: res => {
+            if (res.statusCode === 200) {
+              store.commit('home/setWord', res.data.text)
+            }
           }
         })
+      },
+      fail: () => {
+        this.getWord()
       }
-      f()
     })
   }
 }

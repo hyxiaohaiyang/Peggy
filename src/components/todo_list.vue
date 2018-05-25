@@ -24,8 +24,8 @@
     },
     data() {
 		  return {
-        startX: null,
-        disX: null,
+        startX: 0,
+        disX: 0,
         goTop: null,
       }
     },
@@ -113,6 +113,8 @@
     overflow-x: auto;
     flex-direction: row;
     align-items: center;
+    justify-content:space-around;
+
   }
 
   .main-todos .main-todo .main-todo-title .circle {
@@ -134,6 +136,7 @@
 
   .main-todos .main-todo .main-todo-title .main-todo-str-done {
     text-decoration: line-through;
+    color: #c8c7c8;
   }
 
   .main-todos .main-todo .main-todo-title .main-todo-str {

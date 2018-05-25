@@ -1,6 +1,9 @@
+import store from '../store'
+import {IS_DEV} from "../utils"
+
 export default class WeatherService {
   constructor() {
-    this.weatherApiUrl = 'https://zhufengshop.com/api/home/weather'
+    this.weatherApiUrl = (() => IS_DEV ? 'http://127.0.0.1:3000/api/home/weather' : 'https://zhufengshop.com/api/home/weather')()
     this.weatherToIconOptions = {
       "0": {
         text: "晴天",
@@ -121,7 +124,7 @@ export default class WeatherService {
     }
   }
 
-  getWeather() {
+  async getWeather() {
     wx.getStorage({
       key: 'signInfo',
       success: keyRes => {
@@ -144,9 +147,11 @@ export default class WeatherService {
 
               success: (res) => {
                 if (res.statusCode === 200) {
-                  wx.setStorage({
-                    key: 'weatherInfo',
-                    data: JSON.stringify(res.data)
+                  const weathertext = this.weatherToIconOptions[res.data.code].text
+                  const weatherIconClass = this.weatherToIconOptions[res.data.code].class
+                  store.commit('home/setWeather', {
+                    weathertext: weathertext,
+                    weatherIconClass: weatherIconClass
                   })
                 }
               }

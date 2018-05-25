@@ -1,7 +1,6 @@
 import {formatTime} from "../../utils"
 
 const state = {
-  allTodos: [],
   nowTodos: [],
   markDate: []
 }
@@ -41,10 +40,6 @@ const getters = {
 const mutations = {
   setNowTodos(state, {date, todos}) {
     state.nowTodos = [...todos]
-    this.dispatch('todo/updateAllTodos', {
-      date: date,
-      todos: state.nowTodos
-    })
   },
   setMarkDate(state, markDate) {
     state.markDate = [...markDate]
@@ -60,31 +55,13 @@ const mutations = {
   },
   deleteNowTodo(state, {date, todo}) {
     state.nowTodos.splice(state.nowTodos.findIndex(v => v._id === todo._id), 1)
-    this.dispatch('todo/updateAllTodos', {
-      date: date,
-      todos: state.nowTodos
-    })
   },
   updateNowTodo(state, todo) {
     state.nowTodos.splice(state.nowTodos.findIndex(v => v._id === todo._id), 1, todo)
   },
-  updateAllTodos(state, {date, todos}) {
-    const index = state.allTodos.findIndex(v => v.date === date)
-    if (index === -1) {
-      state.allTodos.push({
-        date: date,
-        todos: todos
-      })
-    } else {
-      state.allTodos[index].todos = [...todos]
-    }
-  }
 }
 
 const actions = {
-  async updateAllTodos({state, commit}, {date, todos}) {
-    commit('updateAllTodos', {date: date, todos: todos})
-  }
 }
 
 export default {

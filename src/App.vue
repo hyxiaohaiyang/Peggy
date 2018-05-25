@@ -2,59 +2,8 @@
   import Vue from 'vue'
 
   export default {
-    created() {
-      if (!this.checkToken()) {
-        this.login()
-          .then(() => {
-            Promise.all([Vue.$wordService.getWord(), Vue.$weatherService.getWeather()])
-          })
-      } else {
-        Promise.all([Vue.$weatherService.getWeather(),Vue.$wordService.getWord()])
-      }
-
-    },
-    methods: {
-      login() {
-        return new Promise((resolve, reject) => {
-          function req() {
-            wx.login({
-              timeout: 5000,
-              success: (res) => {
-                wx.request({
-                  url: 'https://zhufengshop.com/api/login',
-
-                  method: 'POST',
-
-                  data: {
-                    code: res.code
-                  },
-
-                  success: (res) => {
-                    if (res.statusCode === 200) {
-                      wx.setStorageSync('signInfo', JSON.stringify(res.data))
-                      resolve()
-                    } else {
-                      wx.showToast({
-                        title: '登录失败，请检查您的网路连接',
-                        icon: 'none',
-                        duration: 2000
-                      })
-                      reject()
-                    }
-                  }
-
-                })
-              },
-              fail: () => {
-                console.log('Re Login!')
-                req()
-              }
-            })
-          }
-          req()
-        })
-      },
-      checkToken() {
+    beforeCreate() {
+      function checkToken() {
         const token = wx.getStorageSync('signInfo');
         if (token) {
           const payload = JSON.parse(token);
@@ -63,6 +12,18 @@
           return false
         }
       }
+      if (!checkToken()) {
+        Vue.$userService.login()
+          .then(() => {
+            // 这里通过Promise.all 并行
+            Promise.all([Vue.$wordService.getWord(), Vue.$weatherService.getWeather(), Vue.$todoService.getTodosFromDate(Date.now())])
+          })
+      } else {
+        Promise.all([Vue.$weatherService.getWeather(),Vue.$wordService.getWord(), Vue.$todoService.getTodosFromDate(Date.now())])
+      }
+
+    },
+    methods: {
     }
   }
 </script>

@@ -1,8 +1,9 @@
 import store from '../store'
+import {IS_DEV} from "../utils"
 
 export default class TodoService {
   constructor() {
-    this.todoApiUrl = 'https://zhufengshop.com/api/todo'
+    this.todoApiUrl = (() => IS_DEV ? 'http://127.0.0.1:3000/api/todo' : 'https://zhufengshop.com/api/todo')()
   }
 
   timeStampParse(timeStamp) {
@@ -11,7 +12,7 @@ export default class TodoService {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   }
 
-  getTodosFromDate(timeStamp) {
+  async getTodosFromDate(timeStamp) {
     const dateStr = this.timeStampParse(timeStamp);
 
     wx.getStorage({
