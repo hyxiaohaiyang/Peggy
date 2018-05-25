@@ -37,7 +37,7 @@ export default {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#77a7ff',
-      navigationBarTitleText: '日程管理',
+      navigationBarTitleText: 'PEGGY',
       navigationBarTextStyle: 'white'
     }
   }

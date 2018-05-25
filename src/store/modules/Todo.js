@@ -29,7 +29,7 @@ const getters = {
         const endDate = new Date(v.endAt)
         v.verboseEndAt = `
               ${createdDate.getMonth() + 1}月${createdDate.getDate()}号--${endDate.getMonth() + 1}月${endDate.getDate()}日
-                    剩余${parseInt((endDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24))}天
+                    剩余${parseInt((endDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)) + 1}天
               `
       }
     })

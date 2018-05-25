@@ -51,6 +51,8 @@
 
   import TodoList from '../../components/todo_list'
 
+  import Vue from 'vue'
+
   export default {
     components: {
       TodoList
@@ -64,7 +66,8 @@
         ],
         sortTodos: null,
         startY: 0,
-        disY: 0
+        disY: 0,
+        firstEnter: true
       }
     },
     computed: {
@@ -85,6 +88,10 @@
       }
     },
     onShow() {
+      if (!this.firstEnter) {
+        Vue.$todoService.getTodosFromDate(Date.now())
+      }
+      this.firstEnter = false
       this.sortTodos = null
     },
     methods: {

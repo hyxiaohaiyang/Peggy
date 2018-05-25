@@ -46,7 +46,8 @@
             success: (res) => {
               if (res.confirm) {
                 Vue.$todoService.deleteTodo(e.currentTarget.dataset.todo)
-                this.$emit('hasDelete')
+                  .then(() => this.$emit('hasDelete'))
+
               }
             }
           })

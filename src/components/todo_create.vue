@@ -8,7 +8,7 @@
     <section class="todo-create-input" v-if="choseType === 1">
       <img src="../../static/img/pencil.png"/>
       <div>
-        <input v-bind:placeholder="'这里填写'+date+'日的安排'"  v-model="content" auto-focus/>
+        <input v-bind:placeholder="'这里填写'+date+'日的安排'"  v-model="content" :adjust-position="true" :cursor-spacing="120" />
       </div>
     </section>
 
@@ -17,7 +17,7 @@
         <img src="../../static/img/db.png">
         <span class="type2-date-starttime">{{startDay}}</span>
         <span>-------</span>
-        <picker mode="date" :value="endAt" :start="pickerStart" @change="bindDateChange">
+        <picker mode="date" :value="endAt" :start="pickerStart" :end="pickerEnd" @change="bindDateChange">
           <view class="picker">
             <span v-if="!endAt">请选择截止日期</span><span v-else>{{verboseEndAt}}</span>
           </view>
@@ -26,7 +26,7 @@
       <div class="todo-create-input">
         <img src="../../static/img/pencil.png" style="flex-basis: 20%"/>
         <div style="flex-basis: 80%">
-          <input v-bind:placeholder="'这里填写'+date+'日的安排'" v-model="content"/>
+          <input v-bind:placeholder="'这里填写'+date+'日的安排'" v-model="content" :adjust-position="true" :cursor-spacing="120" />
         </div>
       </div>
     </section>
@@ -65,7 +65,8 @@
         content: '',
         endAt: null,
         startDay: null,
-        pickerStart: null
+        pickerStart: null,
+        pickerEnd: null
       }
     },
     created() {
@@ -89,7 +90,11 @@
           this.pickerStart = formatTime(d, "yyyy-MM-dd")
           this.startDay = this.toVerboseTimeString(d)
           this.date = d.getDate()
+        } finally {
+          this.pickerEnd = formatTime(new Date(new Date(this.pickerStart).getTime() + 2592000000), "yyyy-MM-dd")
         }
+
+
       },
       bindDateChange(e) {
         this.endAt = e.mp.detail.value

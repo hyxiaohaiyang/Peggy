@@ -144,7 +144,6 @@ export default class TodoService {
   }
 
   deleteTodo(todo) {
-    console.log(todo)
     const datestr = this.timeStampParse(todo.createdAt)
 
     store.commit('todo/deleteNowTodo', {
@@ -158,14 +157,28 @@ export default class TodoService {
       duration: 2000
     })
 
-    wx.request({
-      url: `${this.todoApiUrl}/${todo._id}`,
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: `${this.todoApiUrl}/${todo._id}`,
 
-      method: 'DELETE',
+        method: 'DELETE',
 
-      header: {
-        'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
-      }
+        header: {
+          'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
+        },
+
+        success: (res) => {
+          if (res.statusCode === 200) {
+            resolve(true)
+          } else {
+            reject(false)
+          }
+        },
+
+        fail: () => {
+          reject(false)
+        }
+      })
     })
   }
 }

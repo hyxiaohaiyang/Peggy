@@ -301,7 +301,7 @@
     flex-wrap: wrap;
     padding: 0 3% 0 3%;
     width: 100%;
-    height: 30vh;
+    height: 31vh;
   }
 
   .wh_content:first-child .wh_content_item {

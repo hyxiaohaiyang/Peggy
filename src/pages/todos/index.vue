@@ -54,12 +54,14 @@
     data() {
       return {
         create: false,
-        choseDay: new Date()
+        choseDay: new Date(),
+        choseMonth: `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
       }
     },
     methods: {
       changeMonth(date) {
-        Vue.$todoService.getTodosDateSet(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}`)
+        this.choseMonth = `${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}`
+        Vue.$todoService.getTodosDateSet(this.choseMonth)
       },
       choseDayHandle(date) {
         this.create = false
@@ -70,7 +72,7 @@
         this.create = true
       },
       handleCreate(createdAt) {
-        store.commit('todo/addMarkDate', createdAt)
+        Vue.$todoService.getTodosDateSet(this.choseMonth)
         wx.showToast({
           title: '创建成功',
           icon: 'success',
@@ -79,9 +81,7 @@
         this.create = false
       },
       handleDelete() {
-        if (this.nowTodos.length === 0) {
-          store.commit('todo/deleteMarkDate', this.choseDay)
-        }
+        Vue.$todoService.getTodosDateSet(this.choseMonth)
       }
     }
   }

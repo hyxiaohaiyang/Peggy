@@ -3,7 +3,7 @@ function formatNumber (n) {
   return str[1] ? str : `0${str}`
 }
 
-export const IS_DEV = true
+export const IS_DEV = false
 
 export function formatTime (date, fmt) {
   let o = {
