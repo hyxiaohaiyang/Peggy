@@ -1,8 +1,11 @@
 <template>
   <section class="main-todos" v-bind:style="{height: height + 'vh'}">
-    <div class="main-todo" v-for="todo in todos" :key="Date.now()" @touchstart="touchS" @touchmove="touchM" @touchend="touchE" v-bind:data-todo="todo">
+    <div class="main-todo animated" v-for="todo in todos"
+         :key="Date.now()"
+         v-bind:class="{'slideOutLeft': todo._id === wantDeleteTodoId, 'bounceInUp': todos._id !== wantDeleteTodoId }"
+         @touchstart="touchS" @touchmove="touchM" @touchend="touchE" v-bind:data-todo="todo">
       <div class="main-todo-title">
-        <i class="circle" v-bind:class="{'circle-yellow': todo.rank === 1, 'circle-red': todo.rank === 2}"></i>
+        <i class="circle " v-bind:class="{'circle-yellow': todo.rank === 1, 'circle-red': todo.rank === 2}"></i>
         <span class="main-todo-str" v-bind:class="{'main-todo-str-yellow': todo.rank === 1, 'main-todo-str-red': todo.rank === 2, 'main-todo-str-done': todo.is_done === true}" >{{todo.content}}</span>
       </div>
       <div class="main-todo-footer">
@@ -27,6 +30,7 @@
         startX: 0,
         disX: 0,
         goTop: null,
+        wantDeleteTodoId: null
       }
     },
     methods: {
@@ -45,8 +49,11 @@
             content: '是否删除该事项',
             success: (res) => {
               if (res.confirm) {
-                Vue.$todoService.deleteTodo(e.currentTarget.dataset.todo)
-                  .then(() => this.$emit('hasDelete'))
+                this.wantDeleteTodoId = e.currentTarget.dataset.todo._id;
+                setTimeout(() => {
+                  Vue.$todoService.deleteTodo(e.currentTarget.dataset.todo)
+                    .then(() => this.$emit('hasDelete'))
+                }, 200)
 
               }
             }

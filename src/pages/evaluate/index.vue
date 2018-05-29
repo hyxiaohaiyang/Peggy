@@ -14,7 +14,7 @@
     </main>
 
     <main class="main-canvas">
-      <canvas canvas-id="lineCanvas" disable-scroll="true" class="canvas"></canvas>
+      <canvas canvas-id="lineCanvas" class="canvas"></canvas>
     </main>
 
   </section>
@@ -22,6 +22,9 @@
 
 <script>
   const wxCharts = require('../../utils/wxcharts-min');
+
+  import Vue from 'vue'
+
   export default {
     data() {
       return {
@@ -29,140 +32,137 @@
       }
     },
     onLoad() {
-      const res = wx.getSystemInfoSync();
-      let windowWidth = res.windowWidth;
-      new wxCharts({
-        animation: true,
-        canvasId: 'ringCanvas1',
-        type: 'ring',
-        extra: {
-          ringWidth: 15,
-          pie: {
-            offsetAngle: -45
+      Vue.$evaluateService.getEvaluateInfo()
+        .then(data => {
+          const res = wx.getSystemInfoSync();
+          let windowWidth = res.windowWidth;
+          let windowHeight = res.windowHeight;
+          let lastMonthRate, monthRate;
+
+          if (data[0].tSum + data[0].fSum === 0) {
+            lastMonthRate = 0
+          } else {
+            lastMonthRate = Math.round(data[0].tSum / (data[0].tSum + data[0].fSum) * 100)
           }
-        },
-        title: {
-          name: '60%',
-          color: '#7cb5ec',
-          fontSize: 25
-        },
-        subtitle: {
-          name: '上周完成率',
-          color: '#666666',
-          fontSize: 15
-        },
-        series: [{
-          name: '已完成',
-          data: 60,
-          stroke: false,
-          color: '#ed8f8f'
-        }, {
-          name: '未完成',
-          data: 40,
-          stroke: false,
-          color: '#ffe8eb'
-        }],
-        disablePieStroke: true,
-        width: windowWidth / 2,
-        height: 200,
-        dataLabel: false,
-        legend: true,
-        background: '#f5f5f5',
-        padding: 0
-      })
-      new wxCharts({
-        animation: true,
-        canvasId: 'ringCanvas2',
-        type: 'ring',
-        extra: {
-          ringWidth: 15,
-          pie: {
-            offsetAngle: -45
+
+          if (data[1].tSum + data[1].fSum === 0) {
+            monthRate = 0
+          } else {
+            monthRate = Math.round(data[1].tSum / (data[1].tSum + data[1].fSum) * 100)
           }
-        },
-        title: {
-          name: '90%',
-          color: '#7cb5ec',
-          fontSize: 25
-        },
-        subtitle: {
-          name: '上月完成率',
-          color: '#666666',
-          fontSize: 15
-        },
-        series: [{
-          name: '已完成',
-          data: 90,
-          stroke: false,
-          color: '#ed8f8f'
-        }, {
-          name: '未完成',
-          data: 10,
-          stroke: false,
-          color: '#ffe8eb'
-        }],
-        disablePieStroke: true,
-        width: windowWidth / 2,
-        height: 200,
-        dataLabel: false,
-        legend: true,
-        background: '#f5f5f5',
-        padding: 0
-      })
-      let simulationData = this.createSimulationData();
-      new wxCharts({
-        canvasId: 'lineCanvas',
-        type: 'line',
-        categories: simulationData.categories,
-        animation: true,
-        // background: '#f5f5f5',
-        series: [{
-          name: '每周完成量',
-          data: simulationData.data,
-          format: function (val, name) {
-            return val.toFixed(2) + '万';
-          }
-        }, {
-          name: '每月完成量',
-          data: [2, 0, 0, 3, 32, 4, 0, 0, 2, 0],
-          format: function (val, name) {
-            return val.toFixed(2) + '万';
-          }
-        }],
-        xAxis: {
-          disableGrid: false
-        },
-        yAxis: {
-          title: '数量',
-          format: function (val) {
-            return val.toFixed(2);
-          },
-          min: 0
-        },
-        width: windowWidth,
-        height: 200,
-        dataLabel: false,
-        dataPointShape: true,
-        extra: {
-          lineStyle: 'straight'
-        }
-      })
+
+
+
+          new wxCharts({
+            animation: true,
+            canvasId: 'ringCanvas2',
+            type: 'ring',
+            extra: {
+              ringWidth: 15,
+              pie: {
+                offsetAngle: -45
+              }
+            },
+            title: {
+              name: `${lastMonthRate}%`,
+              color: '#7cb5ec',
+              fontSize: 25
+            },
+            subtitle: {
+              name: '上月完成率',
+              color: '#666666',
+              fontSize: 15
+            },
+            series: [{
+              name: '已完成',
+              data: lastMonthRate,
+              stroke: false,
+              color: '#ed8f8f'
+            }, {
+              name: '未完成',
+              data: 100 - lastMonthRate,
+              stroke: false,
+              color: '#ffe8eb'
+            }],
+            disablePieStroke: true,
+            width: windowWidth / 2,
+            height: 200,
+            dataLabel: false,
+            legend: true,
+            background: '#f5f5f5',
+            padding: 0
+          })
+
+          new wxCharts({
+            animation: true,
+            canvasId: 'ringCanvas1',
+            type: 'ring',
+            extra: {
+              ringWidth: 15,
+              pie: {
+                offsetAngle: -45
+              }
+            },
+            title: {
+              name: `${monthRate}%`,
+              color: '#7cb5ec',
+              fontSize: 25
+            },
+            subtitle: {
+              name: '当月完成率',
+              color: '#666666',
+              fontSize: 15
+            },
+            series: [{
+              name: '已完成',
+              data: monthRate,
+              stroke: false,
+              color: '#ed8f8f'
+            }, {
+              name: '未完成',
+              data: 100 - monthRate,
+              stroke: false,
+              color: '#ffe8eb'
+            }],
+            disablePieStroke: true,
+            width: windowWidth / 2,
+            height: 200,
+            dataLabel: false,
+            legend: true,
+            background: '#f5f5f5',
+            padding: 0
+          })
+
+          new wxCharts({
+            canvasId: 'lineCanvas',
+            type: 'line',
+            categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            series: [{
+              name: '已完成Todo',
+              data: data[2][0],
+              format: function (val) {
+                return val;
+              }
+            }, {
+              name: '总共的Todo',
+              data: data[2][1],
+              format: function (val) {
+                return val;
+              }
+            }],
+            yAxis: {
+              title: '数量',
+              format: function (val) {
+                return val;
+              },
+              min: 0
+            },
+            width: windowWidth,
+            height: windowHeight * 0.35
+          });
+        })
     },
-    methods: {
-      createSimulationData: function () {
-        var categories = [];
-        var data = [];
-        for (var i = 0; i < 10; i++) {
-          categories.push('2018-' + (i + 1));
-          data.push(Math.random() * (20 - 10) + 10);
-        }
-        // data[4] = null;
-        return {
-          categories: categories,
-          data: data
-        }
-      },
-    }
+    methods: {}
   }
 </script>
 
@@ -222,8 +222,6 @@
     height: 35vh;
     width: 100%;
     text-align: center;
-    display: flex;
-    flex-direction: row;
   }
 
   canvas {

@@ -279,8 +279,8 @@
   .wh_container {
     width: 100%;
     margin: auto;
-    border-bottom: #f4f3f4 6px solid;
-    height: 46vh;
+    border-bottom: #f4f3f4 1vh solid;
+    height: 53vh;
   }
 
   li {
@@ -301,7 +301,7 @@
     flex-wrap: wrap;
     padding: 0 3% 0 3%;
     width: 100%;
-    height: 31vh;
+    height: 39vh;
   }
 
   .wh_content:first-child .wh_content_item {
@@ -318,6 +318,7 @@
     text-align: center;
     color: #222222;
     position: relative;
+    height: 0.5vh;
   }
 
   .wh_content_item div {
@@ -411,7 +412,7 @@
 
   .wh_content_item div .wh_isMark {
     margin: auto;
-    border: #ffe313 3px dotted;
+    border: #ffe313 2.5px dotted;
     text-align: center;
   }
 

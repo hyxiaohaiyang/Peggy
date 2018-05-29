@@ -8,7 +8,7 @@
     ></Calendar>
 
     <main >
-      <TodoList v-bind:todos="nowTodos" v-if="nowTodos && !create" height="40" v-on:hasDelete="handleDelete"></TodoList>
+      <TodoList v-bind:todos="nowTodos" v-if="nowTodos && !create" height="35" v-on:hasDelete="handleDelete"></TodoList>
       <TodoCreate v-if="create" v-bind:choseDay="choseDay" v-on:hasCreate="handleCreate"></TodoCreate>
     </main>
 
@@ -98,7 +98,7 @@
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
-    height: 10vh;
+    height: 8vh;
   }
   footer div {
     cursor: pointer;

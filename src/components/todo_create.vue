@@ -8,7 +8,7 @@
     <section class="todo-create-input" v-if="choseType === 1">
       <img src="../../static/img/pencil.png"/>
       <div>
-        <input v-bind:placeholder="'这里填写'+date+'日的安排'"  v-model="content" :adjust-position="true" :cursor-spacing="120" />
+        <input v-bind:placeholder="'这里填写'+date+'日的安排'" v-model="content" :adjust-position="true" :cursor-spacing="120" />
       </div>
     </section>
 

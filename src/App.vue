@@ -30,6 +30,8 @@
 
 <style>
   @import url(../static/font/iconfont.css);
+  @import "~animate.css/animate.min.css";
+
   .container {
     height: 100%;
     display: flex;

@@ -26,7 +26,7 @@
         <time>{{today}}</time>
         <picker @change="bindSortChange" :range="sortBy">
           <view class="picker">
-            <img src="../../../static/img/sort.png"/>
+            <i class="iconfont icon-paixujiang"></i>
           </view>
         </picker>
 
@@ -212,7 +212,7 @@
   }
 
   .main-head span {
-    border-left: 2px solid #222222;
+    border-left: 2.5px solid #222222;
     flex-basis: 25%;
     padding: 0 0 0 2%;
   }
@@ -223,8 +223,14 @@
 
   .main-head img, .main-head picker {
     max-width: 25px;
-    height: 18px;
+    height: 3vh;
     flex-basis: 33.3%;
+    line-height: 3vh;
+  }
+
+  .main-head i {
+    font-size: 3.5vh;
+    color: #222222;
   }
 
   footer {
