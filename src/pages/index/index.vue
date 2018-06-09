@@ -1,5 +1,5 @@
 <template>
-  <section class="container" @touchstart="touchS" @touchmove="touchM" @touchend="touchE">
+  <section class="container">
     <header>
       <div>每日一句</div>
       <div>{{word}}</div>
@@ -14,9 +14,9 @@
         <img src="../../../static/img/bing.png" class="nav-img">
         历史日程评估
       </div>
-      <div>
-        <img src="../../../static/img/PK.png" class="nav-img">
-        好友日程PK
+      <div @click="goToTodos">
+        <img src="../../../static/img/db.png" class="nav-img">
+        历史日程汇总
       </div>
     </nav>
 
@@ -32,15 +32,9 @@
 
       </section>
 
-      <TodoList v-bind:todos="todos" v-if="todos" height="59" v-on:hasDelete="handleTodoChange" v-on:hasUpdate="handleTodoChange"></TodoList>
+      <TodoList v-bind:todos="todos" v-if="todos" height="71" v-on:hasDelete="handleTodoChange" v-on:hasUpdate="handleTodoChange"></TodoList>
 
     </main>
-
-    <footer>
-      <div @click="goToTodos">
-        <img src="../../../static/img/date.png" class="footer-img">
-      </div>
-    </footer>
   </section>
 
 
@@ -63,10 +57,9 @@
         sortBy: [
           "依照重要程度排序",
           "依照类型排序",
+          "依照完成状态排序"
         ],
         sortTodos: null,
-        startY: 0,
-        disY: 0,
         firstEnter: true
       }
     },
@@ -95,24 +88,6 @@
       this.sortTodos = null
     },
     methods: {
-      touchS(e) {
-        if(e.touches.length === 1){
-          this.startY = e.touches[0].clientY
-        }
-      },
-      touchM(e) {
-        this.disY = this.startY - e.touches[0].clientY;
-      },
-      touchE(e) {
-        console.log(this.disY)
-        if (this.disY > 250) {
-          wx.navigateTo({
-            url: "/pages/todos/main"
-          })
-        }
-        this.startY = 0;
-        this.disY = 0;
-      },
       goToTodos() {
         wx.navigateTo({
           url: "/pages/todos/main"
@@ -131,6 +106,8 @@
           case "1":
             this.sortTodos = store.getters['todo/sortNowTodos']('type')
             return
+          case "2":
+            this.sortTodos = store.getters['todo/sortNowTodos']('is_done')
         }
       },
       handleTodoChange() {
@@ -231,31 +208,5 @@
   .main-head i {
     font-size: 3.5vh;
     color: #222222;
-  }
-
-  footer {
-    width: 100%;
-    margin: 2% 4% 0 0;
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    height: 10vh;
-  }
-
-  footer div {
-    cursor: pointer;
-    background: #85D8FF;
-    box-shadow: 0 3px 3px 0 rgba(93, 198, 248, 0.42);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  footer div .footer-img {
-    width: 29px;
-    height: 32px;
   }
 </style>

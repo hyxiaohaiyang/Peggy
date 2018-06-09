@@ -2,7 +2,8 @@ import {IS_DEV} from "../utils"
 
 export default class userSerivce {
   constructor() {
-    this.loginApiUrl = (() => IS_DEV ? 'http://127.0.0.1:3000/api/login' : 'https://zhufengshop.com/api/login')()
+    this.loginApiUrl = (() => IS_DEV ? 'http://127.0.0.1:3000/api/login' : 'https://zhufengshop.com/api/login')();
+    this.userInfoApiUrl = (() => IS_DEV ? 'http://127.0.0.1:3000/api/userinfo' : 'https://zhufengshop.com/api/userinfo')();
   }
 
 
@@ -11,6 +12,8 @@ export default class userSerivce {
       wx.login({
         timeout: 5000,
         success: (res) => {
+
+          console.log(res.code)
           wx.request({
             url: this.loginApiUrl,
 
@@ -41,6 +44,23 @@ export default class userSerivce {
           req()
         }
       })
+    })
+  }
+
+  postUserInfo(avatarUrl, nickName) {
+    wx.request({
+      url: this.userInfoApiUrl,
+
+      method: 'POST',
+
+      header: {
+        'Authorization': `Bearer ${JSON.parse(wx.getStorageSync('signInfo')).jwt.token}`
+      },
+
+      data: {
+        avatarUrl: avatarUrl,
+        nickName: nickName
+      }
     })
   }
 }

@@ -18,7 +18,8 @@ const getters = {
           .sort((a, b) => a.type - b.type)
         break
       case 'is_done':
-        // TODO
+        tmpArray
+          .sort((a, b) => a.is_done ? 1 : -1)
 
     }
     tmpArray.forEach(v => {

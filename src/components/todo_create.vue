@@ -1,18 +1,18 @@
 <template>
-  <section class="todo-create">
+  <section class="todo-create ">
     <section class="todo-create-tab">
       <button v-bind:class="{'activate': choseType === 1}" @click="choseType = 1">当日</button>
       <button v-bind:class="{'activate': choseType === 2}" @click="choseType = 2">多日</button>
     </section>
 
-    <section class="todo-create-input" v-if="choseType === 1">
+    <section class="todo-create-input animated slideInLeft" v-if="choseType === 1">
       <img src="../../static/img/pencil.png"/>
       <div>
         <input v-bind:placeholder="'这里填写'+date+'日的安排'" v-model="content" :adjust-position="true" :cursor-spacing="120" />
       </div>
     </section>
 
-    <section class="todo-create-type2-input" v-if="choseType === 2">
+    <section class="todo-create-type2-input animated slideInRight" v-if="choseType === 2">
       <div class="type2-date">
         <img src="../../static/img/db.png">
         <span class="type2-date-starttime">{{startDay}}</span>
