@@ -34,4 +34,21 @@ PEGGY日程
 
 # 核心页面展示
 
+## 首页
+
+![首页](https://raw.githubusercontent.com/Lurance/Peggy/master/demo/IMG_0296.PNG)
+
+最上方显示每日心灵鸡汤短句以及当日当地的天气状况（需要定位权限）
+
+往下的导航栏两个按钮分别进入日程评估页面以及历史日程管理页面
+
+下方内容区域显示了当天的所有日程，用户可对日程进行诸如删除，设置完成状态以及按某种方式排序的操作
+
+值得一提的是，首次使用该产品的用户将会有默认的5个日程用来指导用户如何使用：
+
+![首页](https://raw.githubusercontent.com/Lurance/Peggy/master/demo/IMG_0297.PNG)
+
+## 历史日程评估页面
+
+
 
