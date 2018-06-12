@@ -18,7 +18,7 @@
       <canvas canvas-id="ringCanvas2" class="canvas"></canvas>
     </main>
 
-    <main class="main-canvas" v-bind:class="{g: isShare}">
+    <main class="main-canvas">
       <canvas canvas-id="lineCanvas" class="canvas"></canvas>
     </main>
   </section>
@@ -291,10 +291,6 @@
     display: block;
     position: relative;
     width: 100%;
-  }
-
-  .g {
-    margin-top: 10vh;
   }
 
 

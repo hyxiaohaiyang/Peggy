@@ -147,6 +147,14 @@
     color: #c8c7c8;
   }
 
+  .main-todos .main-todo .main-todo-title .main-todo-str-yellow.main-todo-str-done {
+    color: rgba(247, 180, 81, 0.56);
+  }
+
+  .main-todos .main-todo .main-todo-title .main-todo-str-red.main-todo-str-done {
+    color: rgba(255, 24, 0, 0.4);
+  }
+
   .main-todos .main-todo .main-todo-title .main-todo-str {
     margin-left: 3%;
     flex-basis: 90%;
