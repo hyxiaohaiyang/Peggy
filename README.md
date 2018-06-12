@@ -46,7 +46,7 @@ PEGGY日程
 
 值得一提的是，首次使用该产品的用户将会有默认的5个日程用来指导用户如何使用：
 
-![首页](https://raw.githubusercontent.com/Lurance/Peggy/master/demo/n.PNG)
+![首页](https://raw.githubusercontent.com/Lurance/Peggy/master/demo/n.png)
 
 ## 历史日程评估页面
 
